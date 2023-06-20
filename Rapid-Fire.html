@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #testContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        #questionContainer {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #results {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AI Math Quiz</h1>
+    <div id="testContainer">
+        <button onclick="startQuiz()">Start Quiz</button>
+        <div id="timer"></div>
+        <div id="questionContainer"></div>
+        <button onclick="submitQuiz()">Submit Quiz</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        var startTime;
+        var timerInterval;
+        var questionCount = 10;
+        var correctCount = 0;
+        var incorrectCount = 0;
+        var unansweredCount = 0;
+        var operatorList = ["+", "-", "*"];
+
+        function startQuiz() {
+            // Reset counts and timer
+            correctCount = 0;
+            incorrectCount = 0;
+            unansweredCount = 0;
+            clearInterval(timerInterval);
+
+            // Clear previous questions
+            var questionContainer = document.getElementById("questionContainer");
+            questionContainer.innerHTML = "";
+
+            // Generate new questions
+            for (var i = 1; i <= questionCount; i++) {
+                var num1 = Math.floor(Math.random() * 10) + 1;
+                var num2 = Math.floor(Math.random() * 10) + 1;
+                var operator = operatorList[Math.floor(Math.random() * operatorList.length)];
+
+                var question = document.createElement("div");
+                question.className = "question";
+                question.innerHTML = num1 + " " + operator + " " + num2 + " = <input type='number' id='answer" + i + "' data-num1='" + num1 + "' data-num2='" + num2 + "' data-operator='" + operator + "'>";
+
+                questionContainer.appendChild(question);
+            }
+
+            // Start the timer
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            var currentTime = Date.now();
+            var elapsedTime = Math.floor((currentTime - startTime) / 1000);
+
+            var timerElement = document.getElementById("timer");
+            timerElement.innerText = "Time left: " + (20 - elapsedTime) + " seconds";
+
+            // Check if time is up
+            if (elapsedTime >= 20) {
+                clearInterval(timerInterval);
+                submitQuiz();
+                timerElement.innerText = "Time's up!";
+            }
+        }
+
+        function submitQuiz() {
+            clearInterval(timerInterval);
+
+            // Calculate results
+            correctCount = 0;
+            incorrectCount = 0;
+            unansweredCount = 0;
+
+            for (var i = 1; i <= questionCount; i++) {
+                var answer = document.getElementById("answer" + i).value;
+                if (answer === "") {
+                    unansweredCount++;
+                } else {
+                    // Evaluate the user's answer
+                    var num1 = parseInt(document.getElementById("answer" + i).getAttribute("data-num1"));
+                    var num2 = parseInt(document.getElementById("answer" + i).getAttribute("data-num2"));
+                    var operator = document.getElementById("answer" + i).getAttribute("data-operator");
+                    var expectedAnswer = evaluateExpression(num1, num2, operator);
+
+                    if (parseInt(answer) === expectedAnswer) {
+                        correctCount++;
+                    } else {
+                        incorrectCount++;
+                        document.getElementById("answer" + i).classList.add("error");
+                    }
+                }
+            }
+
+            // Display results
+            var results = document.getElementById("results");
+            results.innerHTML = "Results: <br>";
+            results.innerHTML += "Correct: " + correctCount + "<br>";
+            results.innerHTML += "Incorrect: " + incorrectCount + "<br>";
+            results.innerHTML += "Unanswered: " + unansweredCount;
+        }
+
+        function evaluateExpression(num1, num2, operator) {
+            switch (operator) {
+                case "+":
+                    return num1 + num2;
+                case "-":
+                    return num1 - num2;
+                case "*":
+                    return num1 * num2;
+            }
+        }
+    </script>
+</body>
+
+</html>

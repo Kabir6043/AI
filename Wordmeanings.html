@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Word Meaning</title>
+  <script>
+    async function getWordMeaning() {
+      const word = document.getElementById('word-input').value;
+      const url = `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`;
+
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'X-RapidAPI-Key': 'YOUR_RAPIDAPI_KEY',
+            'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com'
+          }
+        });
+        const data = await response.json();
+
+        if (Array.isArray(data.definitions) && data.definitions.length > 0) {
+          const meaning = data.definitions[0].definition;
+          document.getElementById('meaning').innerText = meaning;
+        } else {
+          document.getElementById('meaning').innerText = 'Word not found.';
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Word Meaning</h1>
+  <input type="text" id="word-input" placeholder="Enter a word">
+  <button onclick="getWordMeaning()">Get Meaning</button>
+  <div id="meaning"></div>
+</body>
+</html>

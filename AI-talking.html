@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display:flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items:center;
+        }
+        
+        h1 {
+            text-shadow: 2px 2px 5px red;
+            font-size: 62px;
+            font-style: italic;
+            border-style: double;
+            border-width: 13px;
+        }
+        
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <h1>AI Calculator</h1>
+    <input type="text" id="mathExpression" placeholder="Enter a math problem" autofocus>
+    <br>
+    <button onclick="solveMathProblem()">Solve</button>
+    <div id="result"></div><br><br><br><br>
+    <a href="file:///Users/kabirtandon/Desktop/AI/Test-AI.html"><button>Test Yourself</button></a><br>
+    <a href="file:///Users/kabirtandon/Desktop/AI/Rapid-Fire.html"><button>Rapid-Fire</button></a>
+
+    <script>
+        function solveMathProblem() {
+            // Get the input value
+            var mathExpression = document.getElementById("mathExpression").value;
+
+            try {
+                // Evaluate the math expression
+                var result = eval(mathExpression);
+
+                // Display the result
+                document.getElementById("result").innerText = "Result: " + result;
+            } catch (error) {
+                // Display an error message if there's an error in the math expression
+                document.getElementById("result").innerText = "Invalid math expression";
+            }
+        }
+    </script>
+</body>
+
+</html>
